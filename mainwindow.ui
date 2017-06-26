@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1024</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>DebugTool</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <widget class="QTabWidget" name="tabWidget">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>1024</width>
+      <height>600</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>14</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QTabBar::tab {min-width:180px;min-height:40px;color: white;background-color:qlineargradient(x1:0, y1:0, x2:0, y2:1, stop: 0 #0088ee, stop: 1 gray);border: 2px solid;border-top-left-radius: 10px;border-top-right-radius: 10px;padding:5px;}
+QTabBar::tab:selected {background-color:qlineargradient(x1:0, y1:0, x2:0, y2:1, stop: 0 #ee88ee, stop: 1 gray);}</string>
+    </property>
+    <property name="tabPosition">
+     <enum>QTabWidget::North</enum>
+    </property>
+    <property name="tabShape">
+     <enum>QTabWidget::Rounded</enum>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>24</width>
+      <height>24</height>
+     </size>
+    </property>
+    <widget class="ImageView" name="tab_1">
+     <attribute name="title">
+      <string>图像调试</string>
+     </attribute>
+    </widget>
+    <widget class="VialView" name="tab_2">
+     <attribute name="title">
+      <string>动作调试</string>
+     </attribute>
+    </widget>
+    <widget class="ArmView" name="tab_3">
+     <attribute name="title">
+      <string>机械手调试</string>
+     </attribute>
+    </widget>
+    <widget class="InjectorView" name="tab_4">
+     <attribute name="title">
+      <string>注射器调试</string>
+     </attribute>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>ImageView</class>
+   <extends>QWidget</extends>
+   <header>imageview.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>VialView</class>
+   <extends>QWidget</extends>
+   <header>vialview.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ArmView</class>
+   <extends>QWidget</extends>
+   <header>armview.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>InjectorView</class>
+   <extends>QWidget</extends>
+   <header>injectorview.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
