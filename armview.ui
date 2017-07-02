@@ -1231,6 +1231,19 @@ QSpinBox
     </layout>
    </widget>
   </widget>
+  <widget class="QPushButton" name="ArmAllResetButton">
+   <property name="geometry">
+    <rect>
+     <x>590</x>
+     <y>270</y>
+     <width>171</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>整体复位</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

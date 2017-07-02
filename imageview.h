@@ -4,10 +4,7 @@
 #include <QWidget>
 
 
-#include <iostream>
-using namespace std;
-#include <opencv2/opencv.hpp>
-using namespace cv;
+#include <QCameraThread.h>
 
 namespace Ui {
 class ImageView;
@@ -23,26 +20,15 @@ public:
     
 private:
     Ui::ImageView *ui;
+    QCameraThread *m_pCameraThread1,*m_pCameraThread2;
 
-
-    RotatedRect getRotatedRect(Mat& mat);
-    void drawRotatedRect(Mat &mat,RotatedRect &rRect,Scalar clrLine);
-
-    VideoCapture m_capture[2];
-    Mat m_frame[2];
-    //Mat m_matBack;
-    bool m_bOpen;
-    bool m_bGray,m_bThreshold;
-    void drawObjContours(Mat &matTh);
-//    Mat rotateImage(Mat img, int degree);
 private slots:
-//    void OpenCamera();
-//    void CloseCamera();
-    void CheckGrayBox();
-    void CheckThresholdBox();
-    void on_UpdateBacklightButton_clicked();
-    void on_openButton_pressed();
-    void on_closeButton_pressed();
+
+
+    void on_openCamera1Button_clicked();
+    void on_closeCamera1Button_clicked();
+    void on_openCamera2Button_clicked();
+    void on_closeCamera2Button_clicked();
 };
 
 #endif // IMAGEVIEW_H

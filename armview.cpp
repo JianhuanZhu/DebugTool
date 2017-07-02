@@ -577,3 +577,34 @@ void ArmView::on_ClampMoveSpin_valueChanged(int arg1)
     QString sLabel[]={"安瓿吸液","扳安瓿瓶","安瓿定位","安瓿取瓶"};
     ui->label_MPos->setText(sLabel[arg1-1]);
 }
+
+void ArmView::on_ArmAllResetButton_clicked()
+{
+   //整体复位
+
+    //水平复位-->移动复位-->垂直复位-->旋转复位-->夹紧复位
+    uchar cmd[]={0xA2,0xA4,0xA0,0xA6,0xA8};
+
+    for(int i=0;i<5;i++)
+    {
+        command.command=cmd[i];
+        command.value1=0;
+        command.value2=0;
+        if(m_pCmdCan->Send(&command)<=0)
+        {
+            return;
+        }
+        posc_cmd feeback;
+        int len=sizeof(posc_cmd);
+        if(m_pCmdCan->Recv(&feeback,len,TIMEOUT)<(int)sizeof(posc_cmd))
+        {
+             return;
+        }
+        if(feeback.error!=0xFF)
+        {
+            ErrorInfo::ShowErrinfo((MACH_ARM<<16)|feeback.error);
+            return;
+        }
+    }
+}
+

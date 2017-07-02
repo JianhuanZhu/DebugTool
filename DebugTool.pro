@@ -19,7 +19,9 @@ SOURCES += main.cpp\
     ErrorInfo.cpp \
     dbmanager.cpp \
     armview.cpp \
-    injectorview.cpp
+    injectorview.cpp \
+    labelprint.cpp \
+    QCameraThread.cpp
 
 HEADERS  += mainwindow.h \
     imageview.h \
@@ -35,13 +37,16 @@ HEADERS  += mainwindow.h \
     ErrorInfo.h \
     dbmanager.h \
     armview.h \
-    injectorview.h
+    injectorview.h \
+    labelprint.h \
+    QCameraThread.h
 
 FORMS    += mainwindow.ui \
     imageview.ui \
     vialview.ui \
     armview.ui \
-    injectorview.ui
+    injectorview.ui \
+    labelprint.ui
 
 
 INCLUDEPATH += /usr/local/include \

@@ -7,16 +7,6 @@ ImageView::ImageView(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    //QObject::connect(ui->openButton,SIGNAL(clicked()),this,SLOT(OpenCamera()));
-    //QObject::connect(ui->closeButton,SIGNAL(clicked()),this,SLOT(CloseCamera()));
-    QObject::connect(ui->checkGray,SIGNAL(clicked()),this,SLOT(CheckGrayBox()));
-    QObject::connect(ui->checkThreshold,SIGNAL(clicked()),this,SLOT(CheckThresholdBox()));
-    m_bOpen=false;
-    m_bGray=false;
-    m_bThreshold=false;
-
-    ui->openButton->setEnabled(true);
-    ui->closeButton->setEnabled(false);
 }
 
 ImageView::~ImageView()
@@ -161,176 +151,36 @@ void ImageView::CloseCamera()
 
 #endif
 
-void ImageView::CheckGrayBox()
+
+
+void ImageView::on_openCamera1Button_clicked()
 {
-    m_bGray=ui->checkGray->isChecked();
+     ui->openCamera1Button->setEnabled(false);
+     ui->closeCamera1Button->setEnabled(true);
+     m_pCameraThread1=new QCameraThread(0,this);
+     m_pCameraThread1->setDeg(ui->comboCamera1Rotate->currentIndex());
+     m_pCameraThread1->start();
 }
 
-void ImageView::CheckThresholdBox()
+void ImageView::on_closeCamera1Button_clicked()
 {
-   /* m_bThreshold=ui->checkThreshold->isChecked();
-    if(m_bThreshold)
-    {
-        if (!m_frame.empty())
-            namedWindow("threshold",WINDOW_AUTOSIZE);
-        m_bGray=true;
-        ui->checkGray->setChecked(m_bGray);
-    }
-    else
-    {
-        if (!m_frame.empty())
-           destroyWindow("threshold");
-    }*/
+    m_pCameraThread1->close();
+    ui->openCamera1Button->setEnabled(true);
+    ui->closeCamera1Button->setEnabled(false);
 }
 
-void ImageView::drawObjContours(Mat &matTh)
+void ImageView::on_openCamera2Button_clicked()
 {
-    matTh=255-matTh;
-    std::vector< std::vector<cv::Point> > contours ;
-    findContours(matTh,contours,CV_RETR_EXTERNAL , CV_CHAIN_APPROX_NONE);
-
-
-    Mat matContour;
-    cvtColor(matTh,matContour,CV_GRAY2RGB);
-
-    for(int i=0;i<(int)contours.size();i++)
-    {
-        Rect rc=boundingRect(contours[i]);
-        if(rc.contains(Point(320,400)))
-            drawContours(matContour,contours,i,Scalar(0,255,0),2);
-    }
-
-    imshow("contour",matContour);
+    ui->openCamera2Button->setEnabled(false);
+    ui->closeCamera2Button->setEnabled(true);
+    m_pCameraThread2=new QCameraThread(1,this);
+    m_pCameraThread2->setDeg(ui->comboCamera2Rotate->currentIndex());
+    m_pCameraThread2->start();
 }
 
-
-RotatedRect ImageView::getRotatedRect(Mat& mat)
+void ImageView::on_closeCamera2Button_clicked()
 {
-    RotatedRect rRect;
-    Mat matClone=mat.clone();
-    vector<Point> ptvec;
-    std::vector< std::vector<cv::Point> > contours;
-    findContours(matClone,contours,CV_RETR_EXTERNAL , CV_CHAIN_APPROX_NONE);
-    for(int i=0;i<(int)contours.size();i++)
-    {
-        ptvec.insert(ptvec.end(),contours[i].begin(),contours[i].end());
-    }
-    matClone.release();
-    if(!ptvec.empty())   rRect=minAreaRect(ptvec);
-    return rRect;
-}
-
-
-void ImageView::drawRotatedRect(Mat &mat,RotatedRect &rRect,Scalar clrLine)
-{
-    Point2f pt[4];
-    rRect.points(pt);
-    for(int i=0;i<4;i++)
-        cv::line(mat,pt[i],pt[(i+1)%4],clrLine,2);
-}
-
-
-void ImageView::on_UpdateBacklightButton_clicked()
-{
-    /*if (!m_frame.empty())
-    {
-        cvtColor(m_frame,m_matBack,CV_RGB2GRAY);
-        if(ui->checkShowBacklight->isChecked())
-        {
-            imshow("backlight",m_matBack);
-        }
-        else
-        {
-
-        }
-    }*/
-
-}
-
-
-
-
-
-
-
-
-void ImageView::on_openButton_pressed()
-{
-    ui->openButton->setEnabled(false);
-    ui->closeButton->setEnabled(true);
-    m_bOpen=true;
-
-    bool bOpenCamera[2];
-    bOpenCamera[0]=ui->checkCamera1->isChecked();
-    bOpenCamera[1]=ui->checkCamera2->isChecked();
-
-    String sWinName[2]={"Camera1","Camera2"};
-
-    int iDeg[2];
-    iDeg[0]=ui->comboCamera1Rotate->currentIndex();
-    iDeg[1]=ui->comboCamera2Rotate->currentIndex();
-
-    for(int i=0;i<2;i++)
-    {
-        if(bOpenCamera[i]==false)  continue;
-        if(m_capture[i].isOpened())
-             m_capture[i].release();     //decide if capture is already opened; if so,close it
-         m_capture[i].open(i);           //open the default camera
-         if (m_capture[i].isOpened())
-         {
-             m_capture[i].set(CV_CAP_PROP_FRAME_WIDTH,640);
-             m_capture[i].set(CV_CAP_PROP_FRAME_HEIGHT,480);
-             //capture.set(CV_CAP_PROP_FPS,10);
-             //rate=10;
-             //rate1= capture1.get(CV_CAP_PROP_FPS);
-             namedWindow(sWinName[i],WINDOW_AUTOSIZE);
-         }
-    }
-
-
-   do
-   {
-
-        for(int i=0;i<2;i++)
-        {
-           if(bOpenCamera[i]==false) continue;
-
-           m_capture[i] >> m_frame[i];
-           Mat matShow, matTrans;;
-           if (!m_frame[i].empty())
-           {
-               switch(iDeg[i])
-               {
-               case 0:
-                   matShow=m_frame[i];
-                   break;
-               case 1:
-
-                   transpose(m_frame[i],matTrans);
-                   flip(matTrans,matShow,1);
-                   break;
-               case 2:
-                   flip(m_frame[i],matShow,1);
-                   break;
-               case 3:
-                   transpose(m_frame[i],matShow);
-                   break;
-               }
-               imshow(sWinName[i],matShow);
-
-           }
-        }
-        waitKey(20);
-   }
-   while(m_bOpen);
-
-    ui->openButton->setEnabled(true);
-    ui->closeButton->setEnabled(false);
-}
-
-
-void ImageView::on_closeButton_pressed()
-{
-    m_bOpen=false;
-    destroyAllWindows();
+    m_pCameraThread2->close();
+    ui->openCamera2Button->setEnabled(true);
+    ui->closeCamera2Button->setEnabled(false);
 }

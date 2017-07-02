@@ -69,6 +69,8 @@ private slots:
 
     void on_ClampMoveSpin_valueChanged(int arg1);
 
+    void on_ArmAllResetButton_clicked();
+
 private:
     Ui::ArmView *ui;
 };
